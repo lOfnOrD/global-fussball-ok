@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Global Fussball OK</title>
+</head>
+<body>
+<div class="score" id="left">0</div>
+<div class="score" id="right">0</div>
+<script type="text/javascript" src="jquery-3.2.1.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $(document).keypress(function () {
+            var selector = ".score";
+            var newVal = function(oldText) { return oldText; };
+
+            if(event.key === " ") {
+                newVal = function() { return 0; }
+            }
+            if(event.key === "a" || event.key === "s") {
+                selector = "#left";
+            }
+            if(event.key === "k" || event.key === "l") {
+                selector = "#right";
+            }
+            if(event.key === "a" || event.key === "k") {
+                newVal = function(oldText) { return parseInt(oldText) - 1; };
+            }
+            if(event.key === "s" || event.key === "l") {
+                newVal = function(oldText) { return parseInt(oldText) + 1; };
+            }
+
+            $(selector).text(function (index, oldText) {
+                return newVal(oldText);
+            });
+        });
+    });
+</script>
+</body>
+</html>
