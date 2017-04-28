@@ -3,36 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <title>Global Fussball OK</title>
+    <link rel="stylesheet" href="styles.css"/>
 </head>
-<body>
-<div class="score" id="left">0</div>
-<div class="score" id="right">0</div>
-<script type="text/javascript" src="jquery-3.2.1.min.js"></script>
+<body bgcolor="#228b22">
+<div class="score-board">
+    <div class="player">
+        <div class="white">
+            <span id="white">
+                0
+            </span>
+        </div>
+    </div>
+    <div class="player">
+        <div class="blue">
+            <span id="blue">
+                0
+            </span>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="jquery-3.2.1.js"></script>
 <script type="text/javascript">
     $(function () {
-        $(document).keypress(function () {
-            var selector = ".score";
-            var newVal = function(oldText) { return oldText; };
+        var scores = {white: 0, blue: 0};
+        var mod = {white: 0, blue: 0};
 
-            if(event.key === " ") {
-                newVal = function() { return 0; }
-            }
-            if(event.key === "a" || event.key === "s") {
-                selector = "#left";
-            }
-            if(event.key === "k" || event.key === "l") {
-                selector = "#right";
-            }
-            if(event.key === "a" || event.key === "k") {
-                newVal = function(oldText) { return parseInt(oldText) - 1; };
-            }
-            if(event.key === "s" || event.key === "l") {
-                newVal = function(oldText) { return parseInt(oldText) + 1; };
-            }
-
-            $(selector).text(function (index, oldText) {
-                return newVal(oldText);
+        var update = function () {
+            $.getJSON("scores.json", function (data) {
+                scores = data;
             });
+            $("#white").text(function () {
+                return scores.white + mod.white;
+            });
+
+            $("#blue").text(function () {
+                return scores.blue + mod.blue;
+            });
+        };
+
+        setInterval(update, 100);
+
+        $(document).keypress(function () {
+
+            if (event.key === " ") {
+                mod = {white: -scores.white, blue: -scores.blue};
+            }
+            if (event.key === "a") {
+                mod.white -= 1;
+            }
+            if (event.key === "s") {
+                mod.white += 1;
+            }
+            if (event.key === "k") {
+                mod.blue -= 1;
+            }
+            if (event.key === "l") {
+                mod.blue += 1;
+            }
         });
     });
 </script>
